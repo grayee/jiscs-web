@@ -33,10 +33,14 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
+      // 客户端公钥
+      commit('SET_TOKEN', 'Basic Y2xpZW50X2lkXzEyMzQ1Njc4OTA6Y2xpZW50X3NlY3JldF8xMjM0NTY3ODkw')
+      setToken(state.token)
       login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        const bearerToken = data.token_type + ' ' + data.access_token
+        commit('SET_TOKEN', bearerToken)
+        setToken(bearerToken)
         resolve()
       }).catch(error => {
         reject(error)
