@@ -1,4 +1,5 @@
-import { asyncRoutes, constantRoutes } from '@/router'
+import { constantRoutes } from '@/router'
+const _import = require('../../router/_import_dev')
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -47,10 +48,13 @@ const mutations = {
 }
 
 const actions = {
-  generateRoutes({ commit }, roles) {
+  generateRoutes({ commit }, { roles, menus }) {
     return new Promise(resolve => {
+      console.log('菜单数据:：', JSON.stringify(menus))
+      const asyncRoutes = getRouterByMenu(menus)
+      console.log('路由数据:：', JSON.stringify(asyncRoutes))
       let accessedRoutes
-      if (roles.includes('admin')) {
+      if (roles.includes('ROLE_ADMIN')) {
         accessedRoutes = asyncRoutes || []
       } else {
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
@@ -59,6 +63,40 @@ const actions = {
       resolve(accessedRoutes)
     })
   }
+}
+
+function getRouterByMenu(menus) {
+  const mapRouter = function(menu) {
+    const router = {}
+    router.name = menu.path
+    router.path = menu.path
+    router.meta = {}
+    router.meta.title = menu.text
+    if (menu.attributes.component) {
+      router.components = _import('Content')
+    }
+    return router
+  }
+  const routers = []
+  menus.forEach((menu) => {
+    const curRouter = mapRouter(menu)
+    if (menu.children && menu.children.length) {
+      const fistChildren = menu.children[0]
+      curRouter.path = '/' + fistChildren.path.split('/')[1]
+      curRouter.redirect = fistChildren.path
+      curRouter.component = _import('Content')
+      curRouter.children = getRouterByMenu(menu.children)
+      routers.push(curRouter)
+    } else {
+      if (menu.attributes.pageBtn) {
+        menu.attributes.pageBtn.forEach(btn => {
+          routers.push(mapRouter(btn))
+        })
+      }
+      routers.push(curRouter)
+    }
+  })
+  return routers
 }
 
 export default {

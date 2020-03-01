@@ -1,4 +1,5 @@
 import { login, logout, getInfo } from '@/api/user'
+import { getMenuTree } from '@/api/menu'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -33,21 +34,26 @@ const actions = {
   login({ commit }, userInfo) {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
-      // 客户端公钥
-      commit('SET_TOKEN', 'Basic Y2xpZW50X2lkXzEyMzQ1Njc4OTA6Y2xpZW50X3NlY3JldF8xMjM0NTY3ODkw')
-      setToken(state.token)
       login({ username: username.trim(), password: password }).then(response => {
         const { data } = response
-        const bearerToken = data.token_type + ' ' + data.access_token
-        commit('SET_TOKEN', bearerToken)
-        setToken(bearerToken)
+        commit('SET_TOKEN', data.token)
+        setToken(data.token)
         resolve()
       }).catch(error => {
         reject(error)
       })
     })
   },
-
+  getMenus({ commit }, param) {
+    return new Promise((resolve, reject) => {
+      getMenuTree(param).then(response => {
+        const { data } = response
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
