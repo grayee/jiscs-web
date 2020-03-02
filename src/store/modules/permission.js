@@ -1,4 +1,5 @@
 import { constantRoutes } from '@/router'
+import Layout from '@/layout'
 const _import = require('../../router/_import_dev')
 
 /**
@@ -66,35 +67,28 @@ const actions = {
 }
 
 function getRouterByMenu(menus) {
-  const mapRouter = function(menu) {
-    const router = {}
-    router.name = menu.path
-    router.path = menu.path
-    router.meta = {}
-    router.meta.title = menu.text
-    if (menu.attributes.component) {
-      router.components = _import('Content')
-    }
-    return router
-  }
   const routers = []
   menus.forEach((menu) => {
-    const curRouter = mapRouter(menu)
+    const curRouter = {
+      name: menu.path,
+      path: menu.path,
+      component: menu.attributes.component === '' ? Layout : _import('Content'),
+      meta: {
+        title: menu.text
+      }
+    }
+    /* if (menu.attributes.pageBtn) {
+      curRouter.children = getRouterByMenu(menu.attributes.pageBtn)
+    } else {
+      curRouter.children = []
+    }*/
     if (menu.children && menu.children.length) {
       const fistChildren = menu.children[0]
       curRouter.path = '/' + fistChildren.path.split('/')[1]
       curRouter.redirect = fistChildren.path
-      curRouter.component = _import('Content')
       curRouter.children = getRouterByMenu(menu.children)
-      routers.push(curRouter)
-    } else {
-      if (menu.attributes.pageBtn) {
-        menu.attributes.pageBtn.forEach(btn => {
-          routers.push(mapRouter(btn))
-        })
-      }
-      routers.push(curRouter)
     }
+    routers.push(curRouter)
   })
   return routers
 }
