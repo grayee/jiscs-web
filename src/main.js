@@ -42,7 +42,10 @@ Vue.use(Element, {
   i18n: (key, value) => i18n.t(key, value)
 })
 
-Vue.use(VXETable)
+Vue.use(VXETable, {
+  // 对参数的内容自动进行国际化翻译
+  translate: key => i18n.t(key)
+})
 
 // register global utility filters
 Object.keys(filters).forEach(key => {

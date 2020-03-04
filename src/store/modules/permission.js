@@ -1,6 +1,4 @@
 import { constantRoutes } from '@/router'
-import Layout from '@/layout'
-const _import = require('../../router/_import_dev')
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -72,21 +70,26 @@ function getRouterByMenu(menus) {
     const curRouter = {
       name: menu.path,
       path: menu.path,
-      component: menu.attributes.component === '' ? Layout : _import('Content'),
+      component: menu.attributes.component === '' ? () => import('@/layout') : () => import('@/views/jiscs/menu'),
       meta: {
         title: menu.text
       }
     }
-    /* if (menu.attributes.pageBtn) {
-      curRouter.children = getRouterByMenu(menu.attributes.pageBtn)
-    } else {
-      curRouter.children = []
-    }*/
+    let children = []
+    if (menu.attributes.pageBtn) {
+      children = getRouterByMenu(menu.attributes.pageBtn).concat(children)
+      children.forEach(menu => {
+        menu.hidden = true
+        return menu
+      })
+    }
     if (menu.children && menu.children.length) {
       const fistChildren = menu.children[0]
       curRouter.path = '/' + fistChildren.path.split('/')[1]
       curRouter.redirect = fistChildren.path
-      curRouter.children = getRouterByMenu(menu.children)
+      curRouter.children = getRouterByMenu(menu.children).concat(children)
+    } else {
+      curRouter.children = children
     }
     routers.push(curRouter)
   })

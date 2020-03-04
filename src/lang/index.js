@@ -9,17 +9,22 @@ import enLocale from './en'
 import zhLocale from './zh'
 import esLocale from './es'
 import jaLocale from './ja'
+// vxe-table表格组件的语言包
+import vxetableZhCN from 'vxe-table/lib/locale/lang/zh-CN'
+import vxetableEnUS from 'vxe-table/lib/locale/lang/en-US'
 
 Vue.use(VueI18n)
 
 const messages = {
   en: {
     ...enLocale,
-    ...elementEnLocale
+    ...elementEnLocale,
+    ...vxetableEnUS
   },
   zh: {
     ...zhLocale,
-    ...elementZhLocale
+    ...elementZhLocale,
+    ...vxetableZhCN
   },
   es: {
     ...esLocale,

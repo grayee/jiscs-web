@@ -171,5 +171,14 @@ export default {
     tagsView: '开启 Tags-View',
     fixedHeader: '固定 Header',
     sidebarLogo: '侧边栏 Logo'
+  },
+  app: {
+    body: {
+      label: {
+        search: '查询',
+        submit: '提交',
+        reset: '重置'
+      }
+    }
   }
 }

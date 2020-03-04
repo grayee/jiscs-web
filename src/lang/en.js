@@ -171,5 +171,14 @@ export default {
     tagsView: 'Open Tags-View',
     fixedHeader: 'Fixed Header',
     sidebarLogo: 'Sidebar Logo'
+  },
+  app: {
+    body: {
+      label: {
+        search: 'Search',
+        submit: 'Submit',
+        reset: 'Reset'
+      }
+    }
   }
 }
