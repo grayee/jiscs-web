@@ -36,6 +36,8 @@ if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
 }
+/* import api from './api' // 导入api接口
+Vue.prototype.$api = api // 将api挂载到vue的原型上*/
 
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size
