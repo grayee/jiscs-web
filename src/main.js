@@ -47,6 +47,14 @@ Vue.use(VXETable, {
   translate: key => i18n.t(key)
 })
 
+// 表格的全局参数
+VXETable.setup({
+  border: true,
+  resizable: true,
+  showHeader: true,
+  highlightHoverRow: true
+})
+
 // register global utility filters
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
