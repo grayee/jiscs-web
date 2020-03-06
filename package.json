@@ -73,7 +73,8 @@
     "accounting": "^0.4.1",
     "moment": "^2.24.0",
     "vxe-table": "^2.8.8",
-    "xe-utils": "^2.3.2"
+    "xe-utils": "^2.3.2",
+    "vue-axios": "^2.1.5"
   },
   "devDependencies": {
     "@babel/core": "7.0.0",

@@ -1,45 +1,29 @@
-import request from '@/utils/request'
+import base from './base'; // 导入接口域名列表
+import axios from '@/utils/request'; // 导入request中创建的axios实例
 
-// 公司列表
-export function departmentList(param) {
-  return request({
-    url: '/org/department/list',
-    method: 'post',
-    param
-  })
-}
+const department = {
+  // 公司列表
+  departmentList(param) {
+    return axios.post(`${base.sq}/org/department/list`, param);
+  },
+  // 部门新增
+  departmentAdd(param) {
+    return axios.post(`${base.sq}/org/department`, param);
+  },
+  // 部门新增
+  departmentUpt(param) {
+    return axios.put(`${base.sq}/org/department`, param);
+  },
+  // 部门详情,演示
+  departmentDetail(id, params) {
+    return axios.get(`${base.sq}/org/department/detail/${id}`, {
+      params: params
+    });
+  },
+  departmentDel(param) {
+    return axios.delete(`${base.sq}/org/department`, {data: param});
+  },
+  // 其他接口…………
+};
 
-// 部门新增
-export function departmentAdd(param) {
-  return request({
-    url: '/org/department',
-    method: 'post',
-    param
-  })
-}
-
-// 部门新增
-export function departmentUpt(param) {
-  return request({
-    url: '/org/department',
-    method: 'put',
-    param
-  })
-}
-
-// 部门详情,演示
-export function departmentDetail(id, param) {
-  return request({
-    url: 'org/department/detail/${id}',
-    method: 'get',
-    params: { param }
-  })
-}
-
-export function departmentDel(param) {
-  return request({
-    url: '/org/department',
-    method: 'delete',
-    params: { param }
-  })
-}
+export default department;
