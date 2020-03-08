@@ -6,9 +6,10 @@
 // 文章模块接口
 import company from '@/api/company'
 import department from '@/api/department'
+import menu from '@/api/menu'
 /* import position from '@/api/position'
 import employee from '@/api/employee'
-import menu from '@/api/menu'
+
 import user from '@/api/user'
 import login from '@/api/login'
 import org from '@/api/orgnization'
@@ -21,7 +22,8 @@ export default {
   /* user,
   login,*/
   company,
-  department
+  department,
+  menu
   /*  position,
   employee,
   menu,

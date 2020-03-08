@@ -70,7 +70,7 @@ function getRouterByMenu(menus) {
     const curRouter = {
       name: menu.path,
       path: menu.path,
-      component: menu.attributes.component === '' ? () => import('@/layout') : () => import('@/views/jiscs/company'),
+      component: menu.attributes.component === '' ? () => import('@/layout') : () => import('@/views/jiscs/menu'),
       meta: {
         title: menu.text
       }

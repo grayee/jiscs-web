@@ -9,6 +9,8 @@ import './styles/element-variables.scss'
 
 import '@/styles/index.scss' // global css
 
+import 'font-awesome/css/font-awesome.css'
+
 import 'xe-utils'
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/index.css'
@@ -36,7 +38,7 @@ if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
 }
-/* import api from './api' // 导入api接口
+import api from './api' // 导入api接口
 Vue.prototype.$api = api // 将api挂载到vue的原型上*/
 
 Vue.use(Element, {
@@ -51,10 +53,15 @@ Vue.use(VXETable, {
 
 // 表格的全局参数
 VXETable.setup({
+  size: 'small',
+  headerAlign: 'center',
+  align: 'center',
   border: true,
   resizable: true,
   showHeader: true,
-  highlightHoverRow: true
+  highlightHoverRow: true,
+  showOverflow: true,
+  zIndex: 10000
 })
 
 // register global utility filters

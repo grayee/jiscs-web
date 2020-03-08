@@ -1,6 +1,38 @@
+// 时间格式化组件moment
+import moment from 'moment'
+
+// 金额、货币格式化组件
+import accounting from 'accounting'
+
 /**
  * Created by PanJiaChen on 16/11/18.
  */
+
+// 全局过滤器
+export function dateFmt(inputDate, mod = 0, pattern = 'YYYY-MM-DD HH:mm:ss') {
+  let dateTime = moment(inputDate).format(pattern)
+  switch (mod) {
+    case 0:
+      dateTime = moment(inputDate).startOf('day').format(pattern)
+      break
+    case 1:
+      dateTime = moment(inputDate).endOf('day').format(pattern)
+      break
+  }
+  return dateTime
+}
+
+export function parseToDate(inputStr, pattern = 'YYYY-MM-DD HH:mm:ss') {
+  return moment(inputStr, pattern).toDate()
+}
+
+export function currencyFmt(value) {
+  let currency = ''
+  if (value && typeof (value) !== 'undefined' && value !== 0) {
+    currency = accounting.formatMoney(value, '')
+  }
+  return currency
+}
 
 /**
  * Parse the time to string

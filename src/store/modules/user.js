@@ -1,5 +1,5 @@
 import { login, logout, getInfo } from '@/api/user'
-import { getMenuTree } from '@/api/menu'
+import menu from '@/api/menu'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -46,7 +46,7 @@ const actions = {
   },
   getMenus({ commit }, param) {
     return new Promise((resolve, reject) => {
-      getMenuTree(param).then(response => {
+      menu.getMenuTree(param).then(response => {
         const { data } = response
         resolve(data)
       }).catch(error => {

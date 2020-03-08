@@ -70,11 +70,12 @@
     "vuedraggable": "2.20.0",
     "vuex": "3.1.0",
     "xlsx": "0.14.1",
-    "accounting": "^0.4.1",
-    "moment": "^2.24.0",
-    "vxe-table": "^2.8.8",
-    "xe-utils": "^2.3.2",
-    "vue-axios": "^2.1.5"
+    "accounting": "0.4.1",
+    "moment": "2.24.0",
+    "vxe-table": "2.8.8",
+    "xe-utils": "2.3.2",
+    "vue-axios": "2.1.5",
+    "font-awesome": "4.7.0"
   },
   "devDependencies": {
     "@babel/core": "7.0.0",
