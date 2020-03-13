@@ -71,25 +71,18 @@ function getRouterByMenu(menus) {
       name: menu.path,
       path: menu.path,
       component: menu.attributes.component === '' ? () => import('@/layout') : () => import('@/views/jiscs/menu'),
+      hidden: menu.attributes.menuType === 2,
       meta: {
         title: menu.text
       }
-    }
-    let children = []
-    if (menu.attributes.pageBtn) {
-      children = getRouterByMenu(menu.attributes.pageBtn).concat(children)
-      children.forEach(menu => {
-        menu.hidden = true
-        return menu
-      })
     }
     if (menu.children && menu.children.length) {
       const fistChildren = menu.children[0]
       curRouter.path = '/' + fistChildren.path.split('/')[1]
       curRouter.redirect = fistChildren.path
-      curRouter.children = getRouterByMenu(menu.children).concat(children)
+      curRouter.children = getRouterByMenu(menu.children)
     } else {
-      curRouter.children = children
+      curRouter.children = []
     }
     routers.push(curRouter)
   })

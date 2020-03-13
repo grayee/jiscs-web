@@ -2,20 +2,23 @@
 <template>
   <!-- Main content -->
   <div class="app-container">
-    <vxe-grid
-      height="100%"
-      :loading="loading"
-      :form-config="tableForm"
-      :toolbar="tableToolbar"
-      :seq-config="{startIndex: (tablePage.currentPage - 1) * tablePage.pageSize}"
-      :pager-config="tablePage"
-      :columns="tableColumn"
-      :proxy-config="tableProxy"
-      :checkbox-config="{reserve: true, highlight: true, range: true}"
+    <vxe-table
+      :data="tableData"
+      :tree-config="{children: 'children'}">
+      <vxe-table-column type="seq"></vxe-table-column>
+      <vxe-table-column field="name" title="Name" tree-node></vxe-table-column>
+      <vxe-table-column field="sex" title="Sex"></vxe-table-column>
+      <vxe-table-column field="date" title="Date"></vxe-table-column>
+    </vxe-table>
+
+
+<!--    <vxe-grid
+      border
+      resizable
       tree-config
-      @form-submit="findList"
-      @page-change="handlePageChange"
-    />
+      :proxy-config="tableProxy"
+      :columns="tableColumn"></vxe-grid>-->
+
     <!-- /.content -->
   </div>
 </template>
@@ -28,6 +31,59 @@ export default {
     return {
       msg: null,
       loading: false,
+      tableData:[{
+        name: 'test1',
+        sex: '男',
+        date: '2019-08',
+        children: [
+          {
+            name: 'test2',
+            sex: '女',
+            date: '2019-08',
+            children: [
+              {
+                name: 'test3',
+                sex: '男',
+                date: '2019-08',
+              },
+              {
+                name: 'test11',
+                sex: '男',
+                date: '2019-08',
+              }
+            ]
+          },
+          {
+            name: 'test7',
+            sex: '女',
+            date: '2019-08',
+            children: [
+              {
+                name: 'test9',
+                sex: '男',
+                date: '2019-08',
+              }
+            ]
+          }
+        ]
+      },
+        {
+          name: 'test4',
+          sex: '男',
+          date: '2019-08',
+          children: [
+            {
+              name: 'test5',
+              sex: '女',
+              date: '2019-08',
+            },
+            {
+              name: 'test15',
+              sex: '女',
+              date: '2019-08',
+            }
+          ]
+        }],
       tableForm: {
         titleWidth: 100,
         titleAlign: 'right',
@@ -52,25 +108,18 @@ export default {
         resizable: true,
         custom: true
       },
-      tableColumn: [],
+      tableColumn: [
+        { field: 'name', title: '名称' },
+        { field: 'sex', title: '大小' },
+        { field: 'date', title: '创建时间'}
+      ],
       tableProxy: {
         form: true, // 启用表单代理
         ajax: {
           // page 对象： { pageSize, currentPage }
-          query: ({ page, sort, filters, form }) => this.findList({ page, sort, filters, form }),
-          // body 对象： { removeRecords }
-          delete: ({ body }) => this.findList(body),
-          // body 对象： { insertRecords, updateRecords, removeRecords, pendingRecords }
-          save: ({ body }) => this.findList(body)
+          query: ({ page, sort, filters, form }) => this.findList({ page, sort, filters, form })
+
         }
-      },
-      tablePage: {
-        currentPage: 1,
-        pageSize: 10,
-        align: 'right',
-        pageSizes: [10, 20, 50, 100, 200, 500],
-        layouts: ['Sizes', 'PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'FullJump', 'Total'],
-        perfect: true
       }
     }
   },
@@ -87,37 +136,65 @@ export default {
     findList(param) {
       this.loading = true
       const filters = []
-      for (const field in param.form) {
-        if (param.form[field]) {
-          const filter = {
-            property: field,
-            operator: 'like',
-            value: param.form[field]
-          }
-          if (field.endsWith('From')) {
-            filter.property = field.substr(0, field.indexOf('From'))
-            filter.operator = 'greaterThanOrEqualTo'
-            filter.value = this.dateFmt(param.form[field])
-          } else if (field.endsWith('To')) {
-            filter.property = field.substr(0, field.indexOf('To'))
-            filter.operator = 'lessThanOrEqualTo'
-            filter.value = this.dateFmt(param.form[field], 1)
-          }
-          filters.push(filter)
-        }
-      }
       return this.$api.menu.getMenuTree({
-        pageNo: param.page.currentPage,
-        pageSize: param.page.pageSize,
+        pageNo: 1,
+        pageSize: 20,
         queryFilters: filters
       }).then((response) => {
-        this.tableColumn = [{ type: 'checkbox', width: 50 }, { type: 'seq', width: 60 }]
-        response.data.forEach(col => this.tableColumn.push({
-          field: 'text',
-          title: col.text
-        }))
         this.loading = false
-        return response.data
+        return [{
+          name: 'test1',
+          sex: '男',
+          date: '2019-08',
+          children: [
+            {
+              name: 'test2',
+              sex: '女',
+              date: '2019-08',
+              children: [
+                {
+                  name: 'test3',
+                  sex: '男',
+                  date: '2019-08',
+                },
+                {
+                  name: 'test11',
+                  sex: '男',
+                  date: '2019-08',
+                }
+              ]
+            },
+            {
+              name: 'test7',
+              sex: '女',
+              date: '2019-08',
+              children: [
+                {
+                  name: 'test9',
+                  sex: '男',
+                  date: '2019-08',
+                }
+              ]
+            }
+          ]
+        },
+          {
+            name: 'test4',
+            sex: '男',
+            date: '2019-08',
+            children: [
+              {
+                name: 'test5',
+                sex: '女',
+                date: '2019-08',
+              },
+              {
+                name: 'test15',
+                sex: '女',
+                date: '2019-08',
+              }
+            ]
+          }]
       }).catch(error => {
         console.log('error', error)
       })
