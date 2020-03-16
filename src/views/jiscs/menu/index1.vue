@@ -46,16 +46,64 @@
 
     <vxe-modal ref="xModal" v-model="showDialog" title="编辑&保存" width="800" resize destroy-on-close>
       <vxe-form :data="formData" :rules="formRules" title-align="right" title-width="100" @submit="submitEvent">
-        <vxe-form-item title="Basic information" span="24" title-align="left" title-width="200px" :title-prefix="{icon: 'fa fa-address-card-o'}" />
-        <vxe-form-item title="Name" field="name" span="12" :item-render="{name: 'input', attrs: {placeholder: '请输入名称'}}" />
-        <vxe-form-item title="Nickname" field="nickname" span="12" :item-render="{name: 'input', attrs: {placeholder: '请输入昵称'}}" />
-        <vxe-form-item title="Role" field="role" span="12" :item-render="{name: 'input', attrs: {placeholder: '请输入角色'}}" />
+        <vxe-form-item
+          title="Basic information"
+          span="24"
+          title-align="left"
+          title-width="200px"
+          :title-prefix="{icon: 'fa fa-address-card-o'}"
+        />
+        <vxe-form-item
+          title="Name"
+          field="name"
+          span="12"
+          :item-render="{name: 'input', attrs: {placeholder: '请输入名称'}}"
+        />
+        <vxe-form-item
+          title="Nickname"
+          field="nickname"
+          span="12"
+          :item-render="{name: 'input', attrs: {placeholder: '请输入昵称'}}"
+        />
+        <vxe-form-item
+          title="Role"
+          field="role"
+          span="12"
+          :item-render="{name: 'input', attrs: {placeholder: '请输入角色'}}"
+        />
         <vxe-form-item title="Sex" field="sex" span="12" :item-render="{name: '$select', options: sexList}" />
-        <vxe-form-item title="Age" field="age" span="12" :item-render="{name: 'input', attrs: {type: 'number', placeholder: '请输入年龄'}}" />
-        <vxe-form-item title="Other information" span="24" title-align="left" title-width="200px" :title-prefix="{message: '请填写必填项', icon: 'fa fa-info-circle'}" />
-        <vxe-form-item title="Number" field="num" span="12" :item-render="{name: 'input', attrs: {type: 'number', placeholder: '请输入数值'}}" />
-        <vxe-form-item title="Date" field="date3" span="12" :item-render="{name: 'input', attrs: {type: 'date', placeholder: '请选择日期'}}" />
-        <vxe-form-item title="Address" field="address" span="24" :title-suffix="{message: '啦啦啦，就是这么强大！！！', icon: 'fa fa-question-circle'}" :item-render="{name: 'textarea', attrs: {placeholder: '请输入地址'}}" />
+        <vxe-form-item
+          title="Age"
+          field="age"
+          span="12"
+          :item-render="{name: 'input', attrs: {type: 'number', placeholder: '请输入年龄'}}"
+        />
+        <vxe-form-item
+          title="Other information"
+          span="24"
+          title-align="left"
+          title-width="200px"
+          :title-prefix="{message: '请填写必填项', icon: 'fa fa-info-circle'}"
+        />
+        <vxe-form-item
+          title="Number"
+          field="num"
+          span="12"
+          :item-render="{name: 'input', attrs: {type: 'number', placeholder: '请输入数值'}}"
+        />
+        <vxe-form-item
+          title="Date"
+          field="date3"
+          span="12"
+          :item-render="{name: 'input', attrs: {type: 'date', placeholder: '请选择日期'}}"
+        />
+        <vxe-form-item
+          title="Address"
+          field="address"
+          span="24"
+          :title-suffix="{message: '啦啦啦，就是这么强大！！！', icon: 'fa fa-question-circle'}"
+          :item-render="{name: 'textarea', attrs: {placeholder: '请输入地址'}}"
+        />
         <vxe-form-item align="center" span="24">
           <vxe-button type="submit" status="primary">保存</vxe-button>
           <vxe-button type="reset">重置</vxe-button>
@@ -96,11 +144,12 @@ export default {
     },
     findList(param) {
       this.loading = true
-      const filters = [{
-        property: 'name',
-        operator: 'like',
-        value: this.formData.name
-      }]
+      const filters = [
+        {
+          property: 'name',
+          operator: 'like',
+          value: this.formData.name
+        }]
       return this.$api.menu.getMenuList({
         pageNo: 1,
         pageSize: 1000,
