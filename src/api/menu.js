@@ -14,6 +14,14 @@ const menu = {
    * @param param 菜单实体
    * @returns {*}
    */
+  getMenuList(param) {
+    return axios.post(`${base.sq}/auth/menu/list`, param)
+  },
+  /**
+   * 菜单新增
+   * @param param 菜单实体
+   * @returns {*}
+   */
   menuAdd(param) {
     return axios.post(`${base.sq}/auth/menu`, param)
   },
