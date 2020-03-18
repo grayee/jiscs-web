@@ -32,6 +32,7 @@ export default {
   methods: {
     handleSetSize(size) {
       this.$ELEMENT.size = size
+      //this.$VXETable.setup({size:size})
       this.$store.dispatch('app/setSize', size)
       this.refreshView()
       this.$message({

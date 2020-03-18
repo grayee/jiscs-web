@@ -53,7 +53,7 @@ Vue.use(VXETable, {
 
 // 表格的全局参数
 VXETable.setup({
-  size: 'small',
+  size: Cookies.get('size') || 'medium', // set element-ui default size
   headerAlign: 'center',
   align: 'center',
   border: true,
