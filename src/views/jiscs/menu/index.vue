@@ -13,19 +13,15 @@
       @toolbar-button-click="toolbarButtonClickEvent"
     ></vxe-grid>
 
-    <vxe-modal ref="xModal" v-model="showDialog" :title="dialogTitle" width="800" resize destroy-on-close>
-      <vxe-form
-        :data="formData"
-        :rules="formRules"
-        title-align="right"
-        title-width="100"
-        @submit="submitEvent"
-      >
+
+    <vxe-modal ref="xModal" v-model="showDialog" :title="dialogTitle" width="800" resize destroy-on-close size="small">
+      <vxe-form :data="formData" :rules="formRules" title-align="right" title-width="120" @submit="submitEvent">
 
         <vxe-form-item title="上级菜单" field="name" span="12">
           <treeselect v-model="formData.name" :multiple="false" :options="tableData" :normalizer="normalizer" placeholder="上级菜单"
-                      :searchable="true" search-nested :max-height="500" style="line-height: 28px"/>
+                      :searchable="true" search-nested :max-height="500"/>
         </vxe-form-item>
+
         <vxe-form-item title="菜单类型" field="nickname" span="12">
           <vxe-radio-group v-model="formData.nickname">
             <vxe-radio label="1">目录</vxe-radio>
@@ -33,44 +29,34 @@
             <vxe-radio label="0">按钮</vxe-radio>
           </vxe-radio-group>
         </vxe-form-item>
-        <vxe-form-item
-          title="菜单名称"
-          field="role"
-          span="12"
-          :item-render="{name: 'input', attrs: {placeholder: '请输入角色'}}"
-        ></vxe-form-item>
-        <vxe-form-item title="菜单图标" field="sex" span="12" :item-render="{name: '$select', options: sexList}"/>
-        <vxe-form-item
-          title="菜单路径"
-          field="age"
-          span="12"
-          :item-render="{name: 'input', attrs: {type: 'number', placeholder: '请输入年龄'}}"
-        ></vxe-form-item>
-        <vxe-form-item
-          title="组件路径"
-          field="num"
-          span="12"
-          :item-render="{name: 'input', attrs: {type: 'number', placeholder: '请输入数值'}}"
-        ></vxe-form-item>
-        <vxe-form-item
-          title="排序编码"
-          field="date3"
-          span="12"
-          :item-render="{name: 'input', attrs: {type: 'date', placeholder: '请选择日期'}}"
-        ></vxe-form-item>
-        <vxe-form-item
-          title="权限编码"
-          field="address"
-          span="12"
-          :title-suffix="{message: '啦啦啦，就是这么强大！！！', icon: 'fa fa-question-circle'}"
-          :item-render="{name: 'textarea', attrs: {placeholder: '请输入地址'}}"
-        ></vxe-form-item>
-        <vxe-form-item
-          title="备注信息"
-          field="date3"
-          span="12"
-          :item-render="{name: 'input', attrs: {type: 'date', placeholder: '请选择日期'}}"
-        ></vxe-form-item>
+
+        <vxe-form-item title="菜单图标" field="role" span="20" >
+          <el-popover
+            placement="bottom-start"
+            width="460"
+            trigger="click"
+            @show="$refs['iconSelect'].reset()">
+            <IconSelect ref="iconSelect" @selected="selected" />
+            <el-input slot="reference" v-model="formData.icon" placeholder="点击选择图标" readonly>
+              <svg-icon v-if="formData.icon"
+                slot="prefix"
+                :icon-class="formData.icon"
+                class="el-input__icon"
+                style="height: 32px;width: 16px;"
+              />
+              <i v-else slot="prefix" class="el-icon-search el-input__icon" />
+            </el-input>
+          </el-popover>
+        </vxe-form-item>
+
+        <vxe-form-item title="菜单名称" field="role" span="10" :item-render="{name: 'input', attrs: {placeholder: '请输入角色'}}"/>
+        <vxe-form-item title="菜单图标" field="sex" span="10" :item-render="{name: '$select', options: sexList}"/>
+        <vxe-form-item title="菜单路径" field="age" span="10" :item-render="{name: 'input', attrs: {type: 'number', placeholder: '请输入年龄'}}"/>
+        <vxe-form-item title="组件路径" field="num" span="10"  :item-render="{name: 'input', attrs: {type: 'number', placeholder: '请输入数值'}}"/>
+        <vxe-form-item title="排序编码" field="date3" span="10" :item-render="{name: 'input', attrs: {type: 'date', placeholder: '请选择日期'}}" />
+        <vxe-form-item title="权限编码" field="date3" span="10" :item-render="{name: 'input', attrs: {type: 'date', placeholder: '请选择日期'}}"/>
+        <vxe-form-item title="备注信息" field="address" span="20" :title-suffix="{message: '啦啦啦，就是这么强大！！！', icon: 'fa fa-question-circle'}" :item-render="{name: 'textarea', attrs: {placeholder: '请输入地址'}}"/>
+
         <vxe-form-item align="center" span="24">
           <vxe-button type="submit" status="primary">保存</vxe-button>
           <vxe-button type="reset">重置</vxe-button>
@@ -85,12 +71,21 @@
   import XEUtils from 'xe-utils'
   // import Treeselect component
   import Treeselect from '@riophae/vue-treeselect'
+  import IconSelect from "@/components/IconSelect";
+
+  import elementIcons from './element-icons'
+
   export default {
     // register the component
-    components: { Treeselect },
+    components: { Treeselect,IconSelect },
     data() {
       return {
         loading: false,
+        sexList: [
+          { label: '', value: '' },
+          { label: '女', value: '0' },
+          { label: '男', value: '1' }
+        ],
         tableProxy: {
           form: true, // 启用表单代理
           ajax: {
@@ -151,6 +146,7 @@
         showDialog: false,
         dialogTitle: '',
         formData: {
+          icon:'',
           name: null,
           nickname: '',
           sex: '',
@@ -229,17 +225,16 @@
           label: node.name,
           children: node.children,
         }
-      }
+      },
+      // 选择图标
+      selected(name) {
+        this.formData.icon = name;
+      },
     }
   }
 </script>
 <!-- 3.样式:解决样式     -->
 <style scoped>
-  .vue-treeselect__control {
-    height: 28px !important;
-  }
-  .vue-treeselect__input-container {
-    height: 26px !important;
-  }
+
 
 </style>

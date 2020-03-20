@@ -61,8 +61,10 @@ VXETable.setup({
   showHeader: true,
   highlightHoverRow: true,
   showOverflow: true,
-  zIndex: 10000
+  zIndex: 999
 })
+
+Vue.prototype.$VXETable = VXETable
 
 // register global utility filters
 Object.keys(filters).forEach(key => {
