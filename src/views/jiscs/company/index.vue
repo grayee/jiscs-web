@@ -51,12 +51,12 @@ export default {
         resizable: true,
         custom: true
       },
-      tableColumn: [],
+      tableColumn: null,
       tableProxy: {
         // 配置响应的数据属性
         props: {
-          result: 'data.content',
-          total: 'data.totalCount'
+          result: 'content',
+          total: 'totalCount'
         },
         form: true, // 启用表单代理
         ajax: {
@@ -115,16 +115,9 @@ export default {
         pageSize: param.page.pageSize,
         queryFilters: filters
       }).then((response) => {
-        this.tableColumn = [{ type: 'checkbox', width: 50 }, { type: 'seq', width: 60 }]
-        response.data.extras.displayColumns.forEach(col => this.tableColumn.push({
-          field: col.field,
-          title: col.title,
-          visible: col.show,
-          width: col.width,
-          sortable: col.sortable
-        }))
         this.loading = false
-        return response
+        this.tableColumn = [{ type: 'checkbox', width: 50 }, { type: 'seq', width: 60 }].concat(response.data.extras.displayColumns)
+        return response.data
       }).catch(error => {
         console.log('error', error)
       })
