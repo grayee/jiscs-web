@@ -43,7 +43,7 @@ export default {
         buttons: [
           { code: 'insert_actived', name: '新增', icon: 'fa fa-plus' },
           { code: 'mark_cancel', name: '删除/取消', icon: 'fa fa-trash-o' },
-          { code: 'save', name: 'app.body.button.save', icon: 'fa fa-save' }
+          { code: 'save', name: 'app.body.label.save', icon: 'fa fa-save' }
         ],
         refresh: true,
         export: true,

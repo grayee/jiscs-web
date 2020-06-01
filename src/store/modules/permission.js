@@ -49,9 +49,9 @@ const mutations = {
 const actions = {
   generateRoutes({ commit }, { roles, menus }) {
     return new Promise(resolve => {
-      console.log('菜单数据:：', JSON.stringify(menus))
+      // console.log('菜单数据:：', JSON.stringify(menus))
       const asyncRoutes = getRouterByMenu(menus)
-      console.log('路由数据:：', JSON.stringify(asyncRoutes))
+      // console.log('路由数据:：', JSON.stringify(asyncRoutes))
       let accessedRoutes
       if (roles.includes('ROLE_ADMIN')) {
         accessedRoutes = asyncRoutes || []
@@ -67,24 +67,26 @@ const actions = {
 function getRouterByMenu(menus) {
   const routers = []
   menus.forEach((menu) => {
-    const curRouter = {
-      name: menu.path,
+    const router = {
+      name: menu.id,
       path: menu.path,
-      component: menu.attributes.component === '' ? () => import('@/layout') : () => import('@/views/jiscs/menu'),
+      component: menu.attributes.component === '' ? () => import('@/layout') : () => import(`@/views/jiscs/${menu.attributes.component}`),
       hidden: menu.attributes.menuType === 2,
       meta: {
-        title: menu.text
+        title: menu.text,
+        icon: menu.iconCls
       }
     }
     if (menu.children && menu.children.length) {
       const fistChildren = menu.children[0]
-      curRouter.path = '/' + fistChildren.path.split('/')[1]
-      curRouter.redirect = fistChildren.path
-      curRouter.children = getRouterByMenu(menu.children)
+      if (fistChildren.attributes.menuType !== 2) {
+        router.redirect = router.path + '/' + fistChildren.path
+      }
+      router.children = getRouterByMenu(menu.children)
     } else {
-      curRouter.children = []
+      router.children = []
     }
-    routers.push(curRouter)
+    routers.push(router)
   })
   return routers
 }

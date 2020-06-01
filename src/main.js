@@ -48,20 +48,32 @@ Vue.use(Element, {
 
 Vue.use(VXETable, {
   // 对参数的内容自动进行国际化翻译
-  translate: key => i18n.t(key)
+  translate: key => i18n.t(key),
+  // 对组件内置的提示语进行国际化翻译
+  i18n: key => i18n.t(key)
 })
 
 // 表格的全局参数
 VXETable.setup({
   size: Cookies.get('size') || 'medium', // set element-ui default size
-  headerAlign: 'center',
-  align: 'center',
-  border: true,
-  resizable: true,
-  showHeader: true,
-  highlightHoverRow: true,
-  showOverflow: true,
-  zIndex: 999
+  zIndex: 999,
+  table: {
+    highlightHoverRow: true,
+    showOverflow: true,
+    headerAlign: 'center',
+    align: 'center',
+    resizable: true,
+    showHeader: true,
+    border: true
+  },
+  pager: {
+    currentPage: 1,
+    pageSize: 10,
+    align: 'right',
+    pageSizes: [10, 20, 50, 100, 200, 500],
+    layouts: ['Sizes', 'PrevJump', 'PrevPage', 'Number', 'NextPage', 'NextJump', 'FullJump', 'Total'],
+    perfect: true
+  }
 })
 
 Vue.prototype.$VXETable = VXETable

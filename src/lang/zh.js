@@ -177,7 +177,8 @@ export default {
       label: {
         search: '查询',
         submit: '提交',
-        reset: '重置'
+        reset: '重置',
+        save: '保存'
       }
     }
   }
