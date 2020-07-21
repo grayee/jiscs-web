@@ -85,3 +85,14 @@ export function isArray(arg) {
   }
   return Array.isArray(arg)
 }
+
+// 判断是否为手机号
+export function validPhone(phone) {
+  const reg = /^[1][3,4,5,7,8][0-9]{9}$/
+  return reg.test(phone)
+}
+// 判断是否为电话号码
+export function validTel(tel) {
+  const reg = /^(([0\+]\d{2,3}-)?(0\d{2,3})-)(\d{7,8})(-(\d{3,}))?$/;
+  return reg.test(tel)
+}

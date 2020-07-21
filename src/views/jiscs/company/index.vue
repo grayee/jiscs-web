@@ -35,8 +35,7 @@
             buttons: [
               { code: 'toAdd', name: '新增', icon: 'fa fa-plus' },
               { code: 'edit', name: '修改', icon: 'fa fa-edit' },
-              { code: 'mark_cancel', name: '删除/取消', icon: 'fa fa-trash-o' },
-              { code: 'save', name: 'app.body.label.save', icon: 'fa fa-save' }
+              { code: 'del', name: '删除', icon: 'fa fa-trash-o' }
             ],
             refresh: true,
             export: true,
@@ -57,11 +56,7 @@
             },
             ajax: {
               // page 对象： { pageSize, currentPage }
-              query: ({ page, sort, filters, form }) => this.findList({ page, sort, filters, form }),
-              // body 对象： { removeRecords }
-              delete: ({ body }) => this.findList(body),
-              // body 对象： { insertRecords, updateRecords, removeRecords, pendingRecords }
-              save: ({ body }) => this.findList(body)
+              query: ({ page, sort, filters, form }) => this.findList({ page, sort, filters, form })
             }
           },
           checkboxConfig: {
@@ -133,6 +128,15 @@
         }).catch(error => {
           console.log('error', error)
         })
+      },
+      delete(data){
+        this.loading = true;
+        return this.$api.company.companyDel(data).then((response) => {
+          this.loading = false;
+          return response;
+        }).catch(error => {
+          console.log('error', error)
+        });
       },
       toolbarButtonClickEvent({ code }, event) {
         const checkedRecord = this.$refs.xGrid.getCheckboxRecords()[0];

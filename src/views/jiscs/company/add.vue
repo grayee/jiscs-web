@@ -84,7 +84,7 @@
         </vxe-form-item>
 
         <vxe-form-item title="座机电话" field="telPhone" span="10">
-          <vxe-input v-model="formData.telPhone" type="integer" placeholder="请输入座机电话" clearable/>
+          <vxe-input v-model="formData.telPhone"  placeholder="请输入座机电话" clearable/>
         </vxe-form-item>
 
         <vxe-form-item title="创建日期" field="createDate" span="10">
@@ -92,7 +92,7 @@
         </vxe-form-item>
 
         <vxe-form-item title="邮编" field="postalCode" span="10">
-          <vxe-input v-model="formData.postalCode" type="integer" placeholder="请输入邮编" clearable/>
+          <vxe-input v-model="formData.postalCode"  placeholder="请输入邮编" clearable/>
         </vxe-form-item>
 
         <vxe-form-item title="备注信息" field="remark" span="20">
@@ -114,11 +114,33 @@
 <script>
   import XEUtils from 'xe-utils'
   import Treeselect from '@riophae/vue-treeselect'
+  import { validEmail,validPhone,validTel} from '@/utils/validate.js'
 
   export default {
     components: {Treeselect},
     name: 'Guide',
     data() {
+      let validateEmail = ({itemValue}) => {
+        if (!validEmail(itemValue)) {
+          return Promise.reject(new Error('邮箱格式错误'))
+        }else{
+          return Promise.resolve()
+        }
+      };
+      let validatePhone = ({itemValue}) => {
+        if (!validPhone(itemValue)) {
+          return Promise.reject(new Error('手机号码格式错误'))
+        }else{
+          return Promise.resolve()
+        }
+      };
+      let validateTel = ({itemValue}) => {
+        if (!validTel(itemValue)) {
+          return Promise.reject(new Error('座机号码格式错误'))
+        }else{
+          return Promise.resolve()
+        }
+      }
       return {
         value: [],
         msg: null,
@@ -144,14 +166,18 @@
             {required: true, message: '请选择性别'}
           ],
           email: [
-            {required: true, message: '请输入邮件地址'}
+            {required: true, message: '请输入邮件地址'},
+            {validator: validateEmail, trigger: 'blur'}
           ],
+
           telPhone: [
             {required: true, message: '请输入座机号码'},
+            {validator: validateTel, trigger: 'blur'},
             {digits: 11, message: '座机号码为 11 个数字'}
           ],
           mobilePhone: [
             {required: true, message: '请输入手机号码'},
+            {validator: validatePhone, trigger: 'blur'},
             {digits: 11, message: '手机号码为 11 个数字'}
           ]
         }
