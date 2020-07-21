@@ -24,6 +24,9 @@ import './icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
 
+import VXETablePluginElement from 'vxe-table-plugin-element'
+import 'vxe-table-plugin-element/dist/style.css'
+
 import * as filters from './filters' // global filters
 
 /**
@@ -76,7 +79,27 @@ VXETable.setup({
   }
 })
 
+VXETable.use(VXETablePluginElement)
+
 Vue.prototype.$VXETable = VXETable
+
+// import Treeselect component
+import Treeselect from '@riophae/vue-treeselect'
+// import the styles
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+Vue.component('treeselect', Treeselect)
+// 创建一个简单的表单-输入框渲染
+VXETable.renderer.add('TreeSelect', {
+  // 项显示模板
+  renderItem (h, renderOpts, params) {
+    const { data, property } = params
+    const props = renderOpts.props || {}
+    // const { events } = renderOpts.events || {}
+    return [
+      <treeselect v-model={ data[property] } { ...{ props } }></treeselect>
+  ]
+  }
+})
 
 // register global utility filters
 Object.keys(filters).forEach(key => {

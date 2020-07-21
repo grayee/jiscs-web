@@ -7,12 +7,12 @@
 import company from '@/api/company'
 import department from '@/api/department'
 import menu from '@/api/menu'
+import org from '@/api/orgnization'
 /* import position from '@/api/position'
 import employee from '@/api/employee'
 
 import user from '@/api/user'
 import login from '@/api/login'
-import org from '@/api/orgnization'
 import dict from '@/api/dictionary'
 import accounting from '@/api/accounting'*/
 // 其他模块的接口……
@@ -23,11 +23,11 @@ export default {
   login,*/
   company,
   department,
+  org,
   menu
   /*  position,
   employee,
   menu,
-  org,
   dict,
   accounting*/
   // ……

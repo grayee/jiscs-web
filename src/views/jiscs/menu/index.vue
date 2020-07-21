@@ -48,6 +48,9 @@
   import XEUtils from 'xe-utils'
   // import Treeselect component
   import Treeselect from '@riophae/vue-treeselect'
+  // import the styles
+  import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+
   import IconSelect from '@/components/IconSelect'
 
   export default {
@@ -57,7 +60,6 @@
       return {
         loading: false,
         menuTypes: [],
-        tableColumn: [],
         gridOptions: {
           keepSource: true,
           rowId: 'id',
@@ -84,46 +86,17 @@
             zoom: true,
             custom: true
           },
-          treeConfig:{},
-          exportConfig: {
-            remote: true,
-            exportMethod: this.exportMethod,
-            types: ['xlsx'],
-            modes: ['current', 'selected', 'all']
-          },
+          treeConfig:true,
+          exportConfig: true,
           columns:[],
           proxyConfig: {
+            seq: true, // 启用动态序号代理
+            sort: true, // 启用排序代理
+            filter: true, // 启用筛选代理
             form: true, // 启用表单代理
             ajax: {
               // 处理树结构转换
-              query: ({ page, sort, filters, form }) => {
-                let queryFilters = [];
-                // 处理筛选条件
-                filters.forEach(({ property, values }) => {
-                  queryFilters.push({
-                    property: property,
-                    operator: "equals",
-                    value: values
-                  }) ;
-                });
-
-                for (let key in form) {
-                  if (typeof(form[key]) != "undefined") {
-                    queryFilters.push({
-                      property: key,
-                      operator: "like",
-                      value: form[key]
-                    });
-                  }
-                }
-                // 处理排序条件
-                const queryParams = {
-                  sort: sort.property,
-                  order: sort.order,
-                  filters:queryFilters
-                };
-                return this.findList(queryParams)
-              },
+              query: ({ page, sort, filters, form }) => this.findList({ page, sort, filters, form }),
               delete: ({ body }) => this.delete(body),
               save: ({ body }) => this.update(body.updateRecords[0])
             }
@@ -135,6 +108,7 @@
           },
           radioConfig: {
             trigger: 'row',
+            labelField: 'id',
             reserve: true,
             highlight: true
           },
@@ -159,18 +133,37 @@
     methods: {
       findList(param) {
         this.loading = true;
+        let queryFilters = [];
+        // 处理筛选条件
+        param.filters.forEach(({ property, values }) => {
+          queryFilters.push({
+            property: property,
+            operator: "equals",
+            value: values
+          }) ;
+        });
+
+        for (let key in param.form) {
+          if (typeof(param.form[key]) != "undefined") {
+            queryFilters.push({
+              property: key,
+              operator: "like",
+              value: param.form[key]
+            });
+          }
+        }
         return this.$api.menu.getMenuList({
           pageNo: 1,
           pageSize: 1000,
-          queryFilters: param.filters
+          queryFilters: queryFilters
         }).then((response) => {
           this.loading = false;
           const extras = response.data.extras;
           this.menuTypes = extras.menuTypeMap.map(t => {
             return { label: t.text, value: t.value }
           });
-          this.tableColumn = [{ type: 'radio', width: 50 }, { type: 'seq', width: 60 }].concat(
-            extras.displayColumns.filter(col=>col.visible).map(col => {
+          this.columns = [{type: 'seq', width: 60, fixed: 'left'},{type: 'radio', title: 'ID',width: 100,fixed: 'left' }].concat(
+            extras.displayColumns.map(col => {
               switch (col.field){
                 case "name":
                   col.treeNode = true;
@@ -201,7 +194,7 @@
               }
               return col
             }));
-          this.$refs.xGrid.loadColumn(this.tableColumn);
+          this.$refs.xGrid.loadColumn(this.columns);
           this.tableData = XEUtils.toArrayTree(response.data.content,
             { strict: false, key: 'id', parentKey: 'parentId', children: 'children' })
           return this.tableData

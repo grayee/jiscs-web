@@ -1,4 +1,4 @@
-import { constantRoutes } from '@/router'
+import {dynamicRoutes, constantRoutes } from '@/router'
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -50,8 +50,9 @@ const actions = {
   generateRoutes({ commit }, { roles, menus }) {
     return new Promise(resolve => {
       // console.log('菜单数据:：', JSON.stringify(menus))
-      const asyncRoutes = getRouterByMenu(menus)
-      // console.log('路由数据:：', JSON.stringify(asyncRoutes))
+      let asyncRoutes = getRouterByMenu(menus)
+      asyncRoutes = asyncRoutes.concat(dynamicRoutes);
+      console.log('路由数据:：', JSON.stringify(asyncRoutes))
       let accessedRoutes
       if (roles.includes('ROLE_ADMIN')) {
         accessedRoutes = asyncRoutes || []
@@ -65,13 +66,15 @@ const actions = {
 }
 
 function getRouterByMenu(menus) {
-  const routers = []
+  let routers = []
   menus.forEach((menu) => {
+    // 0:目录，1:功能菜单，2:按钮
+    const menuType = menu.attributes.menuType;
     const router = {
-      name: menu.id,
+      name: menu.path,
       path: menu.path,
-      component: menu.attributes.component === '' ? () => import('@/layout') : () => import(`@/views/jiscs/${menu.attributes.component}`),
-      hidden: menu.attributes.menuType === 2,
+      component: menuType === 0 ? () => import('@/layout') : () => import(`@/views/jiscs/${menu.attributes.component}`),
+      hidden: menuType === 2,
       meta: {
         title: menu.text,
         icon: menu.iconCls
@@ -81,8 +84,10 @@ function getRouterByMenu(menus) {
       const fistChildren = menu.children[0]
       if (fistChildren.attributes.menuType !== 2) {
         router.redirect = router.path + '/' + fistChildren.path
+        router.children = getRouterByMenu(menu.children)
+      } else {
+        routers = routers.concat(getRouterByMenu(menu.children))
       }
-      router.children = getRouterByMenu(menu.children)
     } else {
       router.children = []
     }
